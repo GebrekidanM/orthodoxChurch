@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: "Jiret";
+    src: url("/fonts/jiret.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: "Saban";
+    src: url("/fonts/sabaean.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Washera";
+    src: url("/fonts/washrab.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Abysinica";
+    src: url("/fonts/AbyssinicaSIL-R.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Hiwua";
+    src: url("/fonts/hiwua.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  *{
+    box-sizing: border-box;
+  }
+
+  body{
+    background-color: rgb(15, 15, 15);
+    color: rgb(201, 202, 202);
+  }
