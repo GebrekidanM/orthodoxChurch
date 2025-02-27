@@ -1,21 +1,10 @@
 const express = require("express");
-const multer = require("multer");
+const upload = require("../middleware/upload");
 const Post = require("../model/postModel");
 const router = express.Router();
 
 const {isAdmin} = require('../middleware/AdminAuth');
 const authenticateUser = require("../middleware/authenticateuser");
-
-// Multer Setup for Image Upload
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Store images in 'uploads/' directory
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage });
 
 // Create New Post
 router.post("/posts",authenticateUser,isAdmin, upload.single("image"), async (req, res) => {
