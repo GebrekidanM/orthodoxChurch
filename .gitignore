@@ -1,0 +1,11 @@
+# Ignore dependencies
+node_modules/
+
+# Ignore environment variables
+.env
+
+dist/
+
+# Ignore system files
+.DS_Store  # macOS
+Thumbs.db  # Windows
