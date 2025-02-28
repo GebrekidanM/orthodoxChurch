@@ -74,14 +74,20 @@ router.post("/logout", (req, res) => {
     res.status(200).json({ message: "Logout successful" });
 });
 
-router.get("/admins", async (req, res) => {
+router.get("/main-admins", async (req, res) => {
   try {
-    const admins = await User.find({ role: "admin" }).select("-password");
-    res.json(admins);
+    const mainAdmins = await User.find({ role: { $in: ["main", "admin"] } }).select("-password");
+    
+    if (mainAdmins.length === 0) {
+      return res.status(404).json({ error: "No Main or Admin Users" });
+    }
+
+    res.json(mainAdmins);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch admins." });
+    res.status(500).json({ error: "Failed to fetch main and admin users." });
   }
 });
+
 // 🔹 Get Authenticated User
 router.get("/me", (req, res) => {
     try {

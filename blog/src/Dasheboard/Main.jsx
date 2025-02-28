@@ -44,7 +44,7 @@ const Main = () => {
           <h1 className="text-xl font-bold">Blog Dashboard</h1>
           <div className="flex items-center">
             <span className="mr-4 tx-white">{user?.username}</span>
-            <img src="" alt="Profile" className="rounded-full" />
+            <img src={`http://localhost:5000/uploads/${user?.image}`} alt="Profile" className="rounded-full w-10 h-10 object-cover" />
           </div>
         </div>
       </header>

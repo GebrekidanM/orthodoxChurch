@@ -3,11 +3,11 @@ const upload = require("../middleware/upload");
 const Post = require("../model/postModel");
 const router = express.Router();
 
-const {isAdmin} = require('../middleware/AdminAuth');
+const {isAdmin, isMain} = require('../middleware/AdminAuth');
 const authenticateUser = require("../middleware/authenticateuser");
 
 // Create New Post
-router.post("/posts",authenticateUser,isAdmin, upload.single("image"), async (req, res) => {
+router.post("/posts",authenticateUser,isAdmin,isMain, upload.single("image"), async (req, res) => {
   try {
     const { title, summary, content, author } = req.body;
     const image = req.file ? req.file.filename : null;
