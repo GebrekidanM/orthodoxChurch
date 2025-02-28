@@ -1,15 +1,18 @@
 import React from 'react'
-import akie from '../assets/akililu.png'
 
-const Profile = () => {
+const Profile = ({name,image,role,email}) => {
   return (
-    <div className='flex flex-col items-center justify-between'>
+    <div className='flex flex-col items-center justify-between rounded-md shadow-sm shadow-white border-amber-50 p-2 '>
       <img 
-            src={akie} 
-            alt='akie profile' 
-            className='rounded-[100%] w-30'
+            src={`http://localhost:5000/uploads/${image}`}
+            alt={`${name} profile`} 
+            className='rounded-[100%] w-30 h-30'
         />
-        <h3>መ/ር አክሊሉ</h3>
+        <h3 className='pt-2 font-bold'>{name}</h3>
+        <div className='flex flex-col justify-center items-center'>
+          <p>{email}</p>
+          <p>{role}</p>
+        </div>
     </div>
   )
 }
