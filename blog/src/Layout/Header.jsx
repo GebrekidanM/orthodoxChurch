@@ -9,9 +9,8 @@ const Header = () => {
 
   const lists = [
     { label: "መጣጥፍ", path: "/posts" },
-    { label: "ጥያቄዎች", path: "/questions" },
+    { label: "ጥያቄዎች", path: "/question" },
     { label: "ስለ እኛ", path: "/about" },
-    { label: "ያግኙን", path: "/contact" },
   ];
 
   const toggleMenu = () => {
@@ -33,7 +32,7 @@ const Header = () => {
   // Show loading state until auth check is complete
   if (loading) {
     return (
-      <div className="w-full px-10 flex justify-between h-14 items-center fixed left-0 top-0 bg-neutral-900 text-white">
+      <div className="w-full px-10 flex justify-between h-full items-center absolute left-0 top-0 bg-neutral-900 text-white">
         Checking authentication...
       </div>
     );
@@ -57,11 +56,12 @@ const Header = () => {
       </button>
 
       {/* Navigation Links (Desktop) */}
-      <ul className={`md:flex gap-4 items-center ${isMenuOpen ? 'block' : 'hidden'}`}>
+      <ul className={`md:flex gap-4 items-center ${isMenuOpen ? 'flex flex-col bg-neutral-900 w-full z-50 absolute top-14 left-0 pb-4' : 'hidden'}`}>
         {lists.map(list => (
           <NavLink 
             key={list.label} 
             to={list.path} 
+            onClick={toggleMenu}
             className={({ isActive }) => getNavLinkClass(isActive)}
           >
             {list.label}

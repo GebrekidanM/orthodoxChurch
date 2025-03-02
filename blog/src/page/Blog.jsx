@@ -49,7 +49,7 @@ const Blog = () => {
   if (error) return <p className="text-red-500 text-center">{error}</p>;
 
   return (
-    <div className="w-full mx-auto mt-10 p-6">
+    <div className="w-full mt-14 mx-auto p-6">
       {/* Search Bar */}
       <div className="w-3/5 mb-4 ml-auto relative">
       <input

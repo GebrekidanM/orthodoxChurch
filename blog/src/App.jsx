@@ -8,8 +8,9 @@ import Register from './page/Register'
 import Login from './page/Login'
 import PostDetail from './components/PostDetail'
 import PostPart from './Layout/PostPart'
-import Main from './Dasheboard/main'
+import Main from './Dasheboard/Main'
 import ProtectedRoute from './components/ProtectedRoute'
+import Question from './page/Question'
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
         <Route path='/posts' element={<Blog />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/question' element={<Question />} />
         <Route path='/postdetail/:id' element={<PostDetail />} />
         
         {/* Protect the dashboard route */}
