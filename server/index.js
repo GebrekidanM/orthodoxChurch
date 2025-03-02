@@ -11,7 +11,24 @@ const userManagementRoute = require('./route/UserManagementRoute')
 
 const app = express()
 
-app.use(cors({ origin: "https://67c49fde395ea3290c745a76--apostolicanswers.netlify.app/", credentials: true }));
+const allowedOrigins = [
+    "https://apostolicanswers.netlify.app", // Main domain
+    "https://67c49fde395ea3290c745a76--apostolicanswers.netlify.app" // Temporary deploy preview
+  ];
+  
+  app.use(
+    cors({
+      origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      credentials: true, // If using cookies or authentication
+    })
+  );
+  
 app.use(express.json())
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
