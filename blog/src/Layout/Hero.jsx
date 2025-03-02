@@ -8,7 +8,7 @@ const Hero = () => {
     const {user} = useAuth()
 
   return (
-        <div className='flex gap-10 items-center w-[80%] ml-[10%] mt-8 h-[90vh]'>
+        <div className='flex lg:flex-row flex-col-reverse md:justify-center lg:mt-14 gap-10 items-center w-[80%] ml-[10%] h-[90vh]'>
             <div className='flex flex-col items-start gap-8'>
                 <p className='flex flex-col gap-2 font-abysinica'>
                     <span className='text-sm'>እንኳን ደህና መጡ</span>
@@ -22,7 +22,11 @@ const Hero = () => {
                         <NavLink to='/register' className='bg-yellow-600 hover:bg-yellow-700 transition-all duration-300 text-center p-2 rounded-sm w-30 font-bold text-black hover:text-amber-950 font-abysinica text-2xl cursor-pointer'>ይመዝገቡ</NavLink>
                 }
             </div>
-            <img src={logo} alt='logo apostolic' className='border-0 border-red-50'/>
+            <img
+                src={logo}
+                alt="logo apostolic"
+                className="w-30 h-30 lg:w-100 lg:h-100 sm:w-40 sm:h-40 md:w-50 md:h-50 md:mt-26  border-0 border-red-50"
+                />
          </div>
   )
 }
