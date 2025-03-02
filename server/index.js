@@ -11,7 +11,7 @@ const userManagementRoute = require('./route/UserManagementRoute')
 
 const app = express()
 
-app.use(cors({ origin: "https://apostolicanswers.netlify.app/", credentials: true }));
+app.use(cors({ origin: "https://67c49fde395ea3290c745a76--apostolicanswers.netlify.app/", credentials: true }));
 app.use(express.json())
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
