@@ -12,8 +12,9 @@ const userManagementRoute = require('./route/UserManagementRoute')
 const app = express()
 
 const allowedOrigins = [
-    "https://apostolicanswers.netlify.app", // Main domain
-    "https://67c49fde395ea3290c745a76--apostolicanswers.netlify.app" // Temporary deploy preview
+   // "https://apostolicanswers.netlify.app", // Main domain
+   // "https://67c49fde395ea3290c745a76--apostolicanswers.netlify.app", // Temporary deploy preview
+    "http://localhost:5173"
   ];
   
   app.use(
@@ -28,7 +29,7 @@ const allowedOrigins = [
       credentials: true, // If using cookies or authentication
     })
   );
-  
+
 app.use(express.json())
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
