@@ -1,4 +1,5 @@
 import React from 'react';
+import host from '../utilities/api';
 
 const Profile = ({ name, image, role, email }) => {
   return (
@@ -7,7 +8,7 @@ const Profile = ({ name, image, role, email }) => {
       
       {/* Profile Image */}
       <img 
-        src={`http://localhost:5000/uploads/${image}`}
+        src={`${host}/uploads/${image}`}
         alt={`${name} profile`} 
         className="rounded-full w-32 h-32 object-cover sm:w-40 sm:h-40 border border-gray-300"
       />

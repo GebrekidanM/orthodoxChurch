@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import api from "../utilities/axiosConfig";
 import { FaThumbsUp, FaRegThumbsUp, FaReply, FaEye } from "react-icons/fa";
+import host from "../utilities/api";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -155,7 +156,7 @@ const PostDetail = () => {
           
           {post.image && (
             <img
-              src={`http://localhost:5000/uploads/${post.image}`}
+              src={`${host}/uploads/${post.image}`}
               alt="Post"
               className="w-full h-100 object-cover object-[75%_25%] rounded-md mb-4"
             />
