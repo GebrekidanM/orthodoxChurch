@@ -8,6 +8,7 @@ const postRoute = require('./route/postRoute')
 const commentRoute = require('./route/commentRoute')
 const questionRoute = require('./route/questionRoute')
 const userManagementRoute = require('./route/UserManagementRoute')
+const layoutRoute = require('./route/layoutRoute')
 
 const app = express()
 
@@ -39,6 +40,8 @@ app.use('/manage', userManagementRoute);
 app.use('/post', postRoute);
 app.use('/comments', commentRoute);
 app.use('/question',questionRoute)
+app.use('/layout',layoutRoute)
+
 
 
 mongoose.connect(process.env.MONGO_URI)

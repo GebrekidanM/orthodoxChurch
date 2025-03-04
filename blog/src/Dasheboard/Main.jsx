@@ -9,13 +9,15 @@ import ManagePost from './ManagePost';
 import UserEdit from './Edit/UserEdit';
 import PostEdit from './Edit/PostEdit';
 import ManageComment from './ManageComment';
+import Layout from './Layout/Layout';
+import About from './Layout/About';
 
 const Main = () => {
     const {user} = useAuth()
     const [searchParams] = useSearchParams();
     const page = searchParams.get("page") || "dashboard";
     const idedit = searchParams.get("idedit");
-
+    const about = searchParams.get("about");
 
     const renderPage = () => {
       switch (page) {
@@ -31,7 +33,9 @@ const Main = () => {
           return <CreatePost />;
         case "manage-comment":
           return <ManageComment />;
-        
+        case "layout":
+          if(about) return <About/>
+          return <Layout />;
         default:
           return <Dashboard />;
       }
