@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../utilities/axiosConfig";
 import { NavLink } from "react-router-dom";
+import host from "../utilities/api";
 
 const PopularPosts = () => {
   const [popularPosts, setPopularPosts] = useState([]);
@@ -23,7 +24,7 @@ const PopularPosts = () => {
       {popularPosts.map((post) => (
         <NavLink to={`/postdetail/${post._id}`} key={post._id} className="block mt-2">
           <div className="flex gap-2">
-            <img src={`http://localhost:5000/uploads/${post.image}`} alt="Popular" className="w-16 h-16 object-cover rounded" />
+            <img src={`${host}/uploads/${post.image}`} alt="Popular" className="w-16 h-16 object-cover rounded" />
             <div className="flex flex-col">
                 <h2 className="text-lg font-semibold">{post.title}</h2>
                 <small className="text-gray-500">
