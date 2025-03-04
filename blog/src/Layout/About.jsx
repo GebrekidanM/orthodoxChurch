@@ -6,6 +6,9 @@ import api from '../utilities/axiosConfig'
 
 const About = () => {
   const [admins, setAdmins] = useState([]);
+  const [about, setAbout] = useState('');
+  const [error, setError] = useState("");
+
 
   useEffect(() => {
     const fetchAdmins = async () => {
@@ -17,8 +20,20 @@ const About = () => {
       }
     };
 
+    const fetchAbout = async () =>{
+      try {
+        const {data} = await api.get('/layout/about')
+        setAbout(data)
+      } catch (error) {
+        setError(error)
+      }
+    }
+
+    fetchAbout();
     fetchAdmins();
   }, []);
+
+
 
   return (
     <div className='w-[90%] ml-[5%] mt-40 flex flex-col  mb-4'>
@@ -43,7 +58,10 @@ const About = () => {
               <img src={logo} alt='logo hawariyawi'className='w-10'/>
               <h2 className='text-2xl text-yellow-600'>ሐዋሪያዊ መልሶች</h2>
             </div>
-            <p>Although Kepler 452b is located in the habitable zone of its star, it is currently too far for humans to reach with our existing space technology. At approximately 1,400 light-years away, it would take tens of thousands of years, even at the speed of the fastest spacecraft we have today (such as the Parker Solar Probe, which travels at around 700,000 km/h). To make human travel to such distant exoplanets a reality, we would need to develop technologies that can achieve much faster speeds, such as propulsion systems based on nuclear fusion, antimatter, or even theoretical concepts like warp drives.</p>
+            <div
+              className="text-lg mb-4"
+              dangerouslySetInnerHTML={{ __html: about.content }}
+            />
           </div>
           
           <div className='flex flex-col lg:w-1/3 mx-auto sm:w-2/3 w-full p-3 bg-gray-750 rounded-md shadow-sm shadow-white'>

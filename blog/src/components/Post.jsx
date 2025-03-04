@@ -1,14 +1,14 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import host from '../utilities/api'
 
 const Post = ({ title, author, date, summary, image, id}) => {
 
   return (
-    <div className="flex flex-col gap-4 w-full bg-gray-750 rounded-sm shadow-sm shadow-white">
-      <img src={image && `http://localhost:5000/uploads/${image}`} 
-           alt="Post Image" 
+    <div className="flex flex-col gap-4 w-full bg-gray-750 h-90 rounded-sm shadow-sm shadow-white">
+      <img src={image && `${host}/uploads/${image}`}
+           alt="Post Image"
            className="w-full h-40 object-cover object-[750%_25%] rounded-t-sm" />
-      
       <div className="flex flex-col p-4">
         <h2 className="text-lg font-bold">{title}</h2>
         <p className="mb-4 text-sm text-gray-400">

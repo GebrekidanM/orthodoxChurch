@@ -9,13 +9,16 @@ import ManagePost from './ManagePost';
 import UserEdit from './Edit/UserEdit';
 import PostEdit from './Edit/PostEdit';
 import ManageComment from './ManageComment';
+import Layout from './Layout/Layout';
+import About from './Layout/About';
+import host from '../utilities/api';
 
 const Main = () => {
     const {user} = useAuth()
     const [searchParams] = useSearchParams();
     const page = searchParams.get("page") || "dashboard";
     const idedit = searchParams.get("idedit");
-
+    const about = searchParams.get("about");
 
     const renderPage = () => {
       switch (page) {
@@ -31,7 +34,9 @@ const Main = () => {
           return <CreatePost />;
         case "manage-comment":
           return <ManageComment />;
-        
+        case "layout":
+          if(about) return <About/>
+          return <Layout />;
         default:
           return <Dashboard />;
       }
@@ -44,7 +49,7 @@ const Main = () => {
           <h1 className="text-xl font-bold">Blog Dashboard</h1>
           <div className="flex items-center">
             <span className="mr-4 tx-white">{user?.username}</span>
-            <img src={`http://localhost:5000/uploads/${user?.image}`} alt="Profile" className="rounded-full w-10 h-10 object-cover" />
+            <img src={`${host}/uploads/${user?.image}`} alt="Profile" className="rounded-full w-10 h-10 object-cover" />
           </div>
         </div>
       </header>

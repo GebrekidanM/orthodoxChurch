@@ -19,7 +19,7 @@ const PopularPosts = () => {
 
   return (
     <div>
-      <h2 className="text-lg font-bold">🔥 Popular Posts</h2>
+      <h2 className="text-2xl font-bold text-yellow-600">ተወዳጅ መጣጥፎች</h2>
       {popularPosts.map((post) => (
         <NavLink to={`/postdetail/${post._id}`} key={post._id} className="block mt-2">
           <div className="flex gap-2">

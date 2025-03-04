@@ -25,7 +25,7 @@ const Hero = () => {
             <img
                 src={logo}
                 alt="logo apostolic"
-                className="w-30 h-30 lg:w-100 lg:h-100 sm:w-40 sm:h-40 md:w-50 md:h-50 md:mt-26  border-0 border-red-50"
+                className="w-30 h-30 lg:w-100 lg:h-100 mt-10 sm:w-40 sm:h-40 md:w-50 md:h-50 md:mt-26  border-0 border-red-50"
                 />
          </div>
   )

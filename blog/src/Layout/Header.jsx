@@ -71,9 +71,10 @@ const Header = () => {
         {/* Conditional Rendering for Login/Logout */}
         {user ? (
           <>
-            <LogoutButton />
+            <LogoutButton onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}/>
             {user.role === "admin" && (
               <Link 
+                onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}
                 to="/mainadmin" 
                 className="list-none font-abysinica font-bold cursor-pointer bg-green-700 py-1 px-3 rounded-md hover:text-yellow-500 transition-colors"
               >
@@ -85,6 +86,7 @@ const Header = () => {
           <NavLink 
             to={'/login'} 
             className={({ isActive }) => getNavLinkClass(isActive, true)}
+            onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}
           >
             ይግቡ
           </NavLink>
