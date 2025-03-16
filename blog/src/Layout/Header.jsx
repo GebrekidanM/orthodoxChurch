@@ -6,6 +6,11 @@ import LogoutButton from '../page/LogoutButton';
 const Header = () => {
   const { user, loading} = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [role,setRole] = useState('')
+
+  useEffect(()=>{
+    setRole(user?.role)
+  },[user])
 
   const lists = [
     { label: "መጣጥፍ", path: "/posts" },
@@ -32,8 +37,8 @@ const Header = () => {
   // Show loading state until auth check is complete
   if (loading) {
     return (
-      <div className="w-full px-10 flex justify-between h-full items-center absolute left-0 top-0 bg-neutral-900 text-white">
-        Checking authentication...
+      <div className="w-screen px-10 flex justify-between h-screen items-center fixed left-0 top-0 bg-neutral-900 text-white">
+        Loading . . .
       </div>
     );
   }
@@ -72,7 +77,7 @@ const Header = () => {
         {user ? (
           <>
             <LogoutButton onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}/>
-            {user.role === "admin" && (
+            {(role === "admin" || 'main') && (
               <Link 
                 onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}
                 to="/mainadmin" 
