@@ -95,7 +95,7 @@ router.get("/me", (req, res) => {
       if (!token) return res.status(401).json({ error: "Unauthorized" });
   
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      res.json({ userId: decoded.userId ,username: decoded.username, email: decoded.email, image:decoded.image,role: decoded.role});
+      res.status(202).json({ userId: decoded.userId ,username: decoded.username, email: decoded.email, image:decoded.image,role: decoded.role});
     } catch (error) {
       res.status(401).json({ error: "Invalid token" });
     }
