@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import LogoutButton from '../page/LogoutButton';
 
 const Header = () => {
-  const { user, loading} = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [role,setRole] = useState('')
+  const { user, loading } = useAuth();
+  const [currentUser, setCurrentUser] = useState(null);
 
-  useEffect(()=>{
-    setRole(user?.role)
-  },[user])
+  useEffect(() => {
+    setCurrentUser(user); // Update user state when authentication changes
+  }, [user]);
 
   const lists = [
     { label: "መጣጥፍ", path: "/posts" },
@@ -18,11 +17,10 @@ const Header = () => {
     { label: "ስለ እኛ", path: "/about" },
   ];
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Function to handle NavLink styling
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   const getNavLinkClass = (isActive, isLoginButton = false) => {
     const baseClass = "list-none font-abysinica font-bold cursor-pointer transition-colors";
     const activeClass = isLoginButton 
@@ -34,8 +32,7 @@ const Header = () => {
     return `${baseClass} ${isActive ? activeClass : inactiveClass}`;
   };
 
-  // Show loading state until auth check is complete
-  if (loading || !role) {
+  if (loading) {
     return (
       <div className="w-screen px-10 flex justify-between h-screen items-center fixed left-0 top-0 bg-neutral-900 text-white">
         Loading . . .
@@ -43,11 +40,10 @@ const Header = () => {
     );
   }
 
-
   return (
     <div className='w-full px-10 flex justify-between h-14 items-center fixed left-0 top-0 bg-neutral-900 z-20'>
       {/* Logo */}
-      <Link to={'/'} className='font-jiret font-bold text-yellow-500 text-xl'>
+      <Link to='/' className='font-jiret font-bold text-yellow-500 text-xl'>
         ሐዋሪያዊ መልሶች
       </Link>
 
@@ -60,13 +56,13 @@ const Header = () => {
         ☰
       </button>
 
-      {/* Navigation Links (Desktop) */}
+      {/* Navigation Links (Desktop & Mobile) */}
       <ul className={`md:flex gap-4 items-center ${isMenuOpen ? 'flex flex-col bg-neutral-900 w-full z-50 absolute top-14 left-0 pb-4' : 'hidden'}`}>
         {lists.map(list => (
           <NavLink 
             key={list.label} 
             to={list.path} 
-            onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}
+            onClick={() => setIsMenuOpen(false)}
             className={({ isActive }) => getNavLinkClass(isActive)}
           >
             {list.label}
@@ -74,10 +70,10 @@ const Header = () => {
         ))}
 
         {/* Conditional Rendering for Login/Logout */}
-        {user ? (
+        {currentUser ? (
           <>
-            <LogoutButton onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}/>
-            {(role === "admin" || role === "main") && (
+            <LogoutButton onClick={() => setIsMenuOpen(false)} />
+            {(currentUser.role === "admin" || currentUser.role === "main") && (
               <Link 
                 onClick={() => setIsMenuOpen(false)} 
                 to="/mainadmin" 
@@ -86,13 +82,12 @@ const Header = () => {
                 ዳሽቦርድ
               </Link>
             )}
-
           </>
         ) : (
           <NavLink 
-            to={'/login'} 
+            to='/login' 
             className={({ isActive }) => getNavLinkClass(isActive, true)}
-            onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}
+            onClick={() => setIsMenuOpen(false)}
           >
             ይግቡ
           </NavLink>
@@ -102,4 +97,4 @@ const Header = () => {
   );
 };
 
-export default Header
+export default Header;
