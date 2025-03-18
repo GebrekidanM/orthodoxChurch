@@ -27,9 +27,10 @@ const allowedOrigins = [
           callback(new Error("Not allowed by CORS"));
         }
       },
-      credentials: true, // If using cookies or authentication
+      credentials: true,
     })
   );
+  
 
 app.use(express.json())
 app.use(cookieParser());
