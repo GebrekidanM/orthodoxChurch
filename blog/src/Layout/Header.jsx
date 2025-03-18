@@ -35,7 +35,7 @@ const Header = () => {
   };
 
   // Show loading state until auth check is complete
-  if (loading || role) {
+  if (loading || !role) {
     return (
       <div className="w-screen px-10 flex justify-between h-screen items-center fixed left-0 top-0 bg-neutral-900 text-white">
         Loading . . .
