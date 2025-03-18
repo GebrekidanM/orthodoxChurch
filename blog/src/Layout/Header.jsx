@@ -77,15 +77,16 @@ const Header = () => {
         {user ? (
           <>
             <LogoutButton onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}/>
-            {(role === "admin" || 'main') && (
+            {(role === "admin" || role === "main") && (
               <Link 
-                onClick={()=> isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(false)}
+                onClick={() => setIsMenuOpen(false)} 
                 to="/mainadmin" 
                 className="list-none font-abysinica font-bold cursor-pointer bg-green-700 py-1 px-3 rounded-md hover:text-yellow-500 transition-colors"
               >
                 ዳሽቦርድ
               </Link>
             )}
+
           </>
         ) : (
           <NavLink 
