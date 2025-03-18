@@ -55,12 +55,13 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password!" });
         }
         
-        const token = jwt.sign({ userId: user._id, email: user.email ,username: user.username,image: user.image, role: user.role}, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ userId: user._id, email: user.email ,username: user.username,image: user.image, role: user.role}, process.env.JWT_SECRET, { expiresIn: "7d" });
         
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
             sameSite: "strict",
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         });
     
         res.status(200).json({user: { username: user.username, email: user.email } });
