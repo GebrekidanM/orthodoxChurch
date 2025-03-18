@@ -5,10 +5,11 @@ import LogoutButton from '../page/LogoutButton';
 
 const Header = () => {
   const { user, loading } = useAuth();
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUserRole, setCurrentUserRole] = useState(null);
+
 
   useEffect(() => {
-    setCurrentUser(user); // Update user state when authentication changes
+    setCurrentUserRole(user?.role)
   }, [user]);
 
   const lists = [
@@ -70,20 +71,9 @@ const Header = () => {
         ))}
 
         {/* Conditional Rendering for Login/Logout */}
-        {currentUser ? (
-          <>
-            <LogoutButton onClick={() => setIsMenuOpen(false)} />
-            {(currentUser.role === "admin" || currentUser.role === "main") && (
-              <Link 
-                onClick={() => setIsMenuOpen(false)} 
-                to="/mainadmin" 
-                className="list-none font-abysinica font-bold cursor-pointer bg-green-700 py-1 px-3 rounded-md hover:text-yellow-500 transition-colors"
-              >
-                ዳሽቦርድ
-              </Link>
-            )}
-          </>
-        ) : (
+        {user ?
+           <LogoutButton onClick={() => setIsMenuOpen(false)} />              
+          : (
           <NavLink 
             to='/login' 
             className={({ isActive }) => getNavLinkClass(isActive, true)}
@@ -92,6 +82,15 @@ const Header = () => {
             ይግቡ
           </NavLink>
         )}
+        {(currentUserRole === "admin" || currentUserRole === "main") && (
+              <Link 
+                onClick={() => setIsMenuOpen(false)} 
+                to="/mainadmin" 
+                className="list-none font-abysinica font-bold cursor-pointer bg-green-700 py-1 px-3 rounded-md hover:text-yellow-500 transition-colors"
+              >
+                ዳሽቦርድ
+              </Link>
+            )}
       </ul>
     </div>
   );
