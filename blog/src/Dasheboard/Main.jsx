@@ -12,6 +12,7 @@ import ManageComment from './ManageComment';
 import Layout from './Layout/Layout';
 import About from './Layout/About';
 import host from '../utilities/api';
+import ManageQuestions from './ManageQuestion';
 
 const Main = () => {
     const {user} = useAuth()
@@ -34,6 +35,8 @@ const Main = () => {
           return <CreatePost />;
         case "manage-comment":
           return <ManageComment />;
+        case "questions":
+          return <ManageQuestions />;
         case "layout":
           if(about) return <About/>
           return <Layout />;

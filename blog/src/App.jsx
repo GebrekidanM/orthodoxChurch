@@ -11,6 +11,7 @@ import PostPart from './Layout/PostPart'
 import Main from './Dasheboard/Main'
 import ProtectedRoute from './components/ProtectedRoute'
 import Question from './page/Question'
+import QuestionDetail from './components/QuestionDetail'
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
         <Route path='/question' element={<Question />} />
+        <Route path='/question/:id' element={<QuestionDetail />} />
         <Route path='/postdetail/:id' element={<PostDetail />} />
         
         {/* Protect the dashboard route */}

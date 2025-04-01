@@ -15,8 +15,8 @@ const Sidebar = () => {
     { link: "manage-user", name: "Manage Users" },
     { link: "manage-post", name: "Manage Posts" },
     { link: "manage-comment", name: "Manage Comments" },
+    { link: "questions", name: "Manage Questions" },
     { link: "layout", name: "Settings" },
-
   ];
 
   return (

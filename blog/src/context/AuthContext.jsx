@@ -23,21 +23,16 @@ export const AuthProvider = ({ children }) => {
     checkUser();
   }, []);
 
+  
   const login = async (email, password) => {
-    setAuthError("");
-
     try {
-      setLoading(true);
       const { data } = await api.post("/user/login", { email, password }); 
-      setUser(data.user);
+      setUser(data.user); // Make sure this sets the complete user data, including `role`.
     } catch (error) {
       setAuthError(handleAxiosError(error));
-      throw error;
-    } finally {
-      setLoading(false);
     }
   };
-
+  
   const logout = async () => {
     try {
       await api.post("/user/logout");

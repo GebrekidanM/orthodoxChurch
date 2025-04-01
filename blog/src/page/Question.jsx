@@ -1,195 +1,248 @@
-import React, { useState, useEffect, useContext } from "react";
-import { FaThumbsUp } from "react-icons/fa";
-import api from "../utilities/axiosConfig"; // Import the axios config
+import React, { useState, useEffect } from "react";
+import api from "../utilities/axiosConfig";
 import { useAuth } from "../context/AuthContext";
 import { NavLink } from "react-router-dom";
+import logo from '/logo.png'
 
 const Questions = () => {
   const [questions, setQuestions] = useState([]);
-  const [filteredQuestions, setFilteredQuestions] = useState([]); // For search filtering
-  const [searchTerm, setSearchTerm] = useState(""); // Search input
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [category, setCategory] = useState("");
   const [newQuestion, setNewQuestion] = useState("");
-  const [newAnswer, setNewAnswer] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState("ሁሉም");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const {user} = useAuth()
+  const [showAskBar, setShowAskBar] = useState(false);
 
   useEffect(() => {
     fetchQuestions();
   }, []);
 
-  // Fetch all questions
+  useEffect(() => {
+    filterQuestions();
+  }, [searchTerm, selectedCategory, questions]);
+
   const fetchQuestions = async () => {
+    setLoading(true);
     try {
       const { data } = await api.get("/question");
       setQuestions(data);
-      setFilteredQuestions(data); // Initialize search results
+      extractCategories(data);
+      setLoading(false);
     } catch (err) {
       setError("Error fetching questions.");
-    }
-  };
-
-  // Handle search input change
-  const handleSearch = (e) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-    if (term.trim() === "") {
-      setFilteredQuestions(questions);
-    } else {
-      const filtered = questions.filter((q) =>
-        q.text.toLowerCase().includes(term.toLowerCase())
-      );
-      setFilteredQuestions(filtered);
-    }
-  };
-
-  // Submit a new question
-  const handleAskQuestion = async (e) => {
-    e.preventDefault();
-    if (!newQuestion.trim()) return;
-
-    try {
-      setLoading(true);
-      const { data } = await api.post("/question", {
-        text: newQuestion,
-        isAnonymous: true,
-      });
-      setQuestions([data.question, ...questions]); // Add new question to UI
-      setFilteredQuestions([data.question, ...questions]); // Update search results
-      setNewQuestion("");
-    } catch (err) {
-      setError("Failed to post question.");
-    } finally {
       setLoading(false);
     }
   };
 
-  // Submit an answer
-  const handleAnswer = async (questionId) => {
-    if (!newAnswer[questionId]?.trim()) return;
+  const extractCategories = (questions) => {
+    const uniqueCategories = ["All", ...new Set(questions.map((q) => q.category))];
+    setCategories(uniqueCategories);
+  };
 
+  const filterQuestions = () => {
+    let filtered = questions;
+    if (selectedCategory !== "All") {
+      filtered = filtered.filter((q) => q.category === selectedCategory);
+    }
+    if (searchTerm.trim() !== "") {
+      filtered = filtered.filter((q) => q.text.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+    setFilteredQuestions(filtered);
+  };
+
+  // Handle new question submission
+  const handleAskSubmit = async () => {
+    if (!newQuestion.trim()) return alert("Please enter a question!");
     try {
-      const { data } = await api.post(`/question/${questionId}/answer`, {
-        text: newAnswer[questionId],
-      });
-
-      setQuestions((prevQuestions) =>
-        prevQuestions.map((q) =>
-          q._id === questionId ? { ...q, answers: [...q.answers, data.answer] } : q
-        )
-      );
-      setFilteredQuestions((prevQuestions) =>
-        prevQuestions.map((q) =>
-          q._id === questionId ? { ...q, answers: [...q.answers, data.answer] } : q
-        )
-      );
-      setNewAnswer({ ...newAnswer, [questionId]: "" });
+      const { data } = await api.post("/question", { text: newQuestion, category});
+      setQuestions((prev) => [data, ...prev]);
+      setNewQuestion("");
+      setCategory('');
+      setShowAskBar(false); // Hide ask bar after submission
     } catch (err) {
-      setError("Failed to post answer.");
+      alert("Failed to submit question.");
     }
   };
 
-  return (
-    <div className="mt-14 mx-auto p-6 flex-col justify-between gap-6 w-full max-w-6xl">
-      {/* Ask a question */}
-      <div className="w-full h-[25vh] lg:h-[50vh] flex lg:gap-6 justify-between flex-col lg:flex-row mt-16 ">
-          <div className="w-full lg:w-6xl flex flex-col gap-6 items-center justify-center"> 
-            <p className="text-2xl">ስለ ኦርቶዶክስ ተዋህዶ ጥያቄ አለዎት?</p>
-            {user 
-                ? 
-                  <NavLink to='/ask' className='bg-yellow-600 mx-auto lg:mx-0 hover:bg-yellow-700 transition-all duration-300 text-center p-2 rounded-sm w-30 font-bold text-black hover:text-amber-950 font-abysinica text-2xl cursor-pointer'>ይጠይቁ</NavLink>
-                :
-                  <NavLink to='/register' className='bg-yellow-600 mx-auto lg:mx-0 hover:bg-yellow-700 transition-all duration-300 text-center p-2 rounded-sm w-30 font-bold text-black hover:text-amber-950 font-abysinica text-2xl cursor-pointer'>ይመዝገቡ</NavLink>
-            }
-          </div>
-          <div className="flex flex-col items-center justify-center">
-            {error && <p className="text-red-500">{error}</p>}
-            <form onSubmit={handleAskQuestion} className="w-full flex gap-3 justify-center items-center mb-6">
-              <input
-                className="w-100 p-2 outline-none border rounded-md border-neutral-500"
-                placeholder="Ask a question..."
-                value={newQuestion}
-                onChange={(e) => setNewQuestion(e.target.value)}
-                disabled={loading}
-              />
-                <button
-                  type="submit"
-                  className="py-2 bg-yellow-600 text-black cursor-pointer font-bold rounded-md px-8 disabled:bg-gray-400"
-                  disabled={loading}
-                >
-                  {loading ? "እየለጠፈ ነው..." : "ጠይቅ"}
-                </button>
-            </form>
-          </div>
-      </div>
 
-        {/* List of Questions */}
-        <div className="lg:w-3/5 w-full">
-          {/* Search bar */}
-          <div className="mb-4 lg:sticky lg:top-14 bg-[#0F0F0F] p-2 h-14">
+  const getTopQuestions = (key, limit = 5, condition = () => true) => {
+    return questions.filter(condition).sort((a, b) => b[key]?.length - a[key]?.length).slice(0, limit);
+  };
+    // Toggle Ask Bar visibility
+    const handleAskClick = () => {
+      setShowAskBar(true);
+    };
+    
+    const truncateText = (text, maxLength = 70) => {
+      return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+    };
+
+  return (
+    <div className="w-full mt-16 flex flex-col gap-6 px-4 lg:px-0">
+      <div>
+        {/* Ask Section */}
+        <div className="w-full flex justify-evenly gap-6 items-center p-6 rounded-md text-center mb-6 shadow-md">
+          <div>
+            <img src={logo} alt="apostolic" className="w-50" />
+          </div>
+
+          <div>
+            <p className="text-xl font-semibold">ስለ ኦርቶዶክስ ተዋህዶ ጥያቄ አለዎት?</p>
+
+            <div className="flex w-full justify-between">
+              <button
+                onClick={handleAskClick}
+                className="block mt-4 bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-6 rounded-md">
+                ይጠይቁ
+              </button>
+              <NavLink
+                to="/register"
+                className="block mt-4 bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-6 rounded-md">
+                ይመዝገቡ
+              </NavLink>
+            </div>
+          </div>
+        </div>
+
+      {/* Ask Bar */}
+      {showAskBar && (
+        <div className="w-1/2 mx-auto bg-neutral-900 p-4 rounded-md shadow-md">
+          <form onSubmit={handleAskSubmit} className="flex flex-col gap-3">
             <input
               type="text"
-              className="w-full p-2 border rounded-md border-neutral-500 outline-none"
-              placeholder="ጥያቄዎችን ፈልግ. . ."
+              placeholder="ጥያቄዎን ይጻፉ..."
+              onChange={e=>setNewQuestion(e.target.value)}
+              className="w-full p-2  rounded-sm border outline-none border-neutral-500"
+            />
+            <select onChange={e => setCategory(e.target.value)} className="w-full p-2 rounded-sm border outline-none border-neutral-500">
+              <option value="">የጥያቄውን ክፍል ይምረጡ . . .</option>
+              <option value="ትርጉም">ትርጉም</option>
+              <option value="ምክንያት">ምክንያት</option>
+              <option value="ነገረ ማርያም">ነገረ ማርያም</option>
+              <option value="ነገረ ክርስቶስ">ነገረ ክርስቶስ</option>
+              <option value="ነገረ ቅዱሳን">ነገረ ቅዱሳን</option>
+              <option value="አምስቱ ምስጥራት">አምስቱ ምስጥራት</option>
+              <option value="መጽሐፍ ቅዱስ">መጽሐፍ ቅዱስ</option>
+            </select>
+            <button
+              type="submit"
+              className="mt-4 bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-6 rounded-md"
+            >
+              አስገባ
+            </button>
+          </form>
+
+        </div>
+      )}
+    </div>
+      <div className="flex flex-col lg:flex-row gap-6 mb-6">
+        {/* Sidebar */}
+        <aside className="hidden lg:block w-1/4 bg-neutral-900 p-4 rounded-md shadow-md">
+          <div className="p-2">
+            <h3 className="text-lg font-bold mt-6 text-white border-b-2 border-amber-950 mb-4">ክፍል</h3>
+            <ul className="space-y-2">
+              {categories.map((category, index) => (
+                <li
+                  key={index}
+                  className={`cursor-pointer ${selectedCategory === category ? "text-yellow-500 font-bold" : "hover:text-yellow-500"}`}
+                  onClick={() => setSelectedCategory(category)}>
+                  {category}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Most Liked Questions */}
+          <div className="p-2">
+            <h3 className="text-lg font-bold mt-6 text-white border-b-2 border-amber-950 mb-4">ተወዳጅ ጥያቄ</h3>
+            <ul>
+              {getTopQuestions("likes", 5, (q) => (q.likes?.length || 0) > 0).map((q) => (
+                <li key={q._id}>
+                  <NavLink to={`/question/${q._id}`} className="hover:text-yellow-500">
+                    {truncateText(q.text,50)}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Most Answered Questions */}
+          <div className="p-2">
+            <h3 className="text-lg font-bold mt-6 text-white border-b-2 border-amber-950 mb-4">ባለ ብዙ መልስ</h3>
+            <ul>
+              {getTopQuestions("answers", 5, (q) => (q.answers?.length || 0) > 0).map((q) => (
+                <li key={q._id}>
+                  <NavLink to={`/question/${q._id}`} className="hover:text-yellow-500">
+                    {truncateText(q.text,50)}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Unanswered Questions */}
+          <div className="p-2">
+            <h3 className="text-lg font-bold mt-6 text-white border-b-2 border-amber-950 mb-4">ያልተመለሱ</h3>
+            <ul className="flex flex-col">
+              {getTopQuestions("answers", 5, (q) => q.answers.length === 0).map((q) => (
+                <li key={q._id} className="text-sm mt-2 p-2 border-sm shadow-sm shadow-neutral-600">
+                  <NavLink to={`/question/${q._id}`} className="hover:text-yellow-500">                   
+                     {truncateText(q.text,50)}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Most Visited Questions */}
+          <div className="p-2">
+            <h3 className="text-lg font-bold mt-6 text-white border-b-2 border-amber-950 mb-4">በብዙ የታዩ</h3>
+            <ul>
+              {getTopQuestions("view", 5, (q) => (q.view || 0) > 0).map((q) => (
+                <li key={q._id}>
+                  <NavLink to={`/question/${q._id}`} className="hover:text-yellow-500">
+                    {truncateText(q.text)}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="w-full lg:w-3/4">
+          <div className="mb-4">
+            <input
+              type="text"
+              className="w-full p-2 border rounded-sm border-neutral-600"
+              placeholder="ጥያቄዎችን ፈልግ..."
               value={searchTerm}
-              onChange={handleSearch}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          {filteredQuestions.length > 0 ? (
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-10">
+              <div className="relative flex items-center justify-center w-16 h-16">
+                <div className="absolute w-full h-full border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                <div className="absolute w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin delay-200"></div>
+              </div>
+              <p className="mt-4 text-lg font-semibold text-yellow-500 animate-pulse">Loading questions...</p>
+            </div>
+          ) : (
             filteredQuestions.map((q) => (
-              <div key={q._id} className="p-4 border-b mb-4">
-                <p className="font-bold">{q.text}</p>
-                <p className="text-sm text-gray-500">
-                  {q.user?.username || "Anonymous"} • {q.answers.length} መልሶች
-                </p>
-
-                {/* Like button */}
-                <button
-                  className="mt-2 flex items-center text-gray-500 hover:text-blue-500"
-                >
-                  <FaThumbsUp className="mr-1" /> {q.likes}
-                </button>
-
-                {/* Display answers */}
-                <div className="ml-4 mt-2 border-l pl-4">
-                  {q.answers.length > 0 ? (
-                    q.answers.map((ans, index) => (
-                      <p key={index} className="text-gray-700">
-                        {ans?.user?.username || "Anonymous"}: {ans?.text}
-                      </p>
-                    ))
-                  ) : (
-                    <p className="text-gray-400">ምንም መልስ የለም</p>
-                  )}
-                </div>
-
-                {/* Answer input */}
-                <div className="mt-3 flex gap-2">
-                  <input
-                    type="text"
-                    className="flex-1 p-2 border rounded-md"
-                    placeholder="Write an answer..."
-                    value={newAnswer[q._id] || ""}
-                    onChange={(e) =>
-                      setNewAnswer({ ...newAnswer, [q._id]: e.target.value })
-                    }
-                  />
-
-                  <button
-                    onClick={() => handleAnswer(q._id)}
-                    className="px-3 py-1 bg-yellow-600 text-white rounded-md"
-                  >
-                    መልስ
-                  </button>
-                </div>
+              <div key={q._id} className="p-4 border-b bg-neutral-900 rounded-md shadow-md mb-4">
+                <NavLink to={`/question/${q._id}`} className="font-bold text-lg hover:text-yellow-500">{q.text}</NavLink>
+                <p className="text-sm text-gray-500">{q.user?.username || "Anonymous"} • {new Date(q.createdAt).toLocaleDateString()} • {q.answers.length} መልሶች  • {q.likes?.length} መውደዶች</p>
               </div>
             ))
-          ) : (
-            <p className="text-gray-500">የተገኘ ጥያቄ የለም።</p>
           )}
-        </div>
-    </div>
+        </main>
+      </div>
+  </div>
   );
 };
 

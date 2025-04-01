@@ -5,7 +5,7 @@ import Footer from './Footer'
 
 const Layout = () => {
   return (
-    <div className='w-[100%]'>
+    <div className='w-full'>
         <Header/>
         <Outlet className='mt-4'/>
         <Footer/>

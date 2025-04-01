@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import LogoutButton from '../page/LogoutButton';
 
 const Header = () => {
   const { user, loading } = useAuth();
-  const [currentUserRole, setCurrentUserRole] = useState(null);
-
-
-  useEffect(() => {
-    setCurrentUserRole(user?.role)
-  }, [user]);
 
   const lists = [
     { label: "መጣጥፍ", path: "/posts" },
@@ -35,8 +29,12 @@ const Header = () => {
 
   if (loading) {
     return (
-      <div className="w-screen px-10 flex justify-between h-screen items-center fixed left-0 top-0 bg-neutral-900 text-white">
-        Loading . . .
+      <div className="flex flex-col items-center justify-center py-10">
+        <div className="relative flex items-center justify-center w-16 h-16">
+          <div className="absolute w-full h-full border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="absolute w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin delay-200"></div>
+          </div>
+          <p className="mt-4 text-lg font-semibold text-yellow-500 animate-pulse">Loading ...</p>
       </div>
     );
   }
@@ -71,18 +69,10 @@ const Header = () => {
         ))}
 
         {/* Conditional Rendering for Login/Logout */}
-        {user ?
-           <LogoutButton onClick={() => setIsMenuOpen(false)} />              
-          : (
-          <NavLink 
-            to='/login' 
-            className={({ isActive }) => getNavLinkClass(isActive, true)}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            ይግቡ
-          </NavLink>
-        )}
-        {(currentUserRole === "admin" || currentUserRole === "main") && (
+        {user ? (
+          <>
+            <LogoutButton onClick={() => setIsMenuOpen(false)} />
+            {user.role == 'admin' && (
               <Link 
                 onClick={() => setIsMenuOpen(false)} 
                 to="/mainadmin" 
@@ -91,6 +81,16 @@ const Header = () => {
                 ዳሽቦርድ
               </Link>
             )}
+          </>
+        ) : (
+          <NavLink 
+            to='/login' 
+            className={({ isActive }) => getNavLinkClass(isActive, true)}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            ይግቡ
+          </NavLink>
+        )}
       </ul>
     </div>
   );

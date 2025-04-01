@@ -58,18 +58,26 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign({ userId: user._id, email: user.email ,username: user.username,image: user.image, role: user.role}, process.env.JWT_SECRET, { expiresIn: "7d" });
         
         res.cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "Strict",
+        });
+/*        
+        res.cookie("token", token, {
             httpOnly: true,
             secure: true,
             sameSite: "None",
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         });
-    
+    */
         res.status(200).json({user: { username: user.username, email: user.email } });
     } catch (error) {
+      console.log(error)
         res.status(500).json({ error: "Login failed!" });
       }
   });
 
+//logout
 router.post("/logout", (req, res) => {
     res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "Strict" });
     res.status(200).json({ message: "Logout successful" });

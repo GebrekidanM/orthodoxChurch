@@ -46,7 +46,16 @@ const Blog = () => {
   );
 
   // 🔄 **Loading State**
-  if (loading) return <p className="text-center text-gray-500">Loading...</p>;
+  if (loading) {
+    return (
+    <div className="flex flex-col items-center justify-center py-10">
+      <div className="relative flex items-center justify-center w-16 h-16">
+        <div className="absolute w-full h-full border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="absolute w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin delay-200"></div>
+      </div>
+      <p className="mt-4 text-lg font-semibold text-yellow-500 animate-pulse">Loading questions...</p>
+    </div>
+  )};
   
   // ❌ **Error Handling**
   if (error && tenPostsError) return <p className="text-red-500 text-center">{error}</p>;

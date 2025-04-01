@@ -17,7 +17,7 @@ const Register = () => {
   const navigate = useNavigate()
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -32,6 +32,7 @@ const Register = () => {
     }
 
     if (!passwordRegex.test(password)) {
+      console.log(password)
       return setError("Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.")
     }
 
@@ -79,7 +80,7 @@ const Register = () => {
   }
 
   return (
-    <div className='w-full flex justify-center mt-16'>
+    <div className='w-full flex justify-center mt-16 mb-6'>
       <Card title="ይመዝገቡ">
         <form onSubmit={handleSubmit} className='w-full p-4 flex flex-col gap-3'>
           <Input type={"text"} change={e => setUsername(e.target.value)} value={username} disable={loading} label={"የተጠቃሚ ስም"}/>

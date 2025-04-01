@@ -13,9 +13,9 @@ const layoutRoute = require('./route/layoutRoute')
 const app = express()
 
 const allowedOrigins = [
-     /* "http://localhost:5173"*/
-    "https://apostolicanswers.netlify.app", // Main domain
-    "https://67c49fde395ea3290c745a76--apostolicanswers.netlify.app", // Temporary deploy preview
+     /*"http://localhost:5173"*/
+     "https://apostolicanswers.netlify.app", // Main domain
+    "https://67c49fde395ea3290c745a76--apostolicanswers.netlify.app"
   ];
   
   app.use(

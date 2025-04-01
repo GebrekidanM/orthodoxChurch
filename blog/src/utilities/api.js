@@ -1,4 +1,3 @@
-const host = "https://apostolicanswers.onrender.com"
-//"http://localhost:5000"
-
+const host = //"http://localhost:5000"
+"https://apostolicanswers.onrender.com"
 export default host;
